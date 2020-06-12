@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SP HOSTEL</string>
+    <array name="department">
+        <item>CE</item>
+        <item>ME</item>
+        <item>EE</item>
+        <item>CST</item>
+    </array>
+</resources>

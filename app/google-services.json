@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "789027051295",
+    "firebase_url": "https://sphostel-3ca65.firebaseio.com",
+    "project_id": "sphostel-3ca65",
+    "storage_bucket": "sphostel-3ca65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789027051295:android:6ce0217ea4c3b33664c22a",
+        "android_client_info": {
+          "package_name": "com.sphostel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789027051295-ts2edtcljt78bis06l0cmm9cdgk6h7e9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sphostel",
+            "certificate_hash": "9d7d2ec8647a3bdf500f6c8313d7c9db132d7f94"
+          }
+        },
+        {
+          "client_id": "789027051295-3hp72iisd3sv6fgr2imev7jv34rfgve6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh5Rju5BVZ1o6vdSctGFsUyF_iuXW26AE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789027051295-3hp72iisd3sv6fgr2imev7jv34rfgve6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
