@@ -20,12 +20,13 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
-            android:contentDescription="Choosse Image"
+            android:contentDescription="Choose Image"
             android:paddingTop="35dp"
-            android:src="@drawable/ic_camera" />
+            android:src="@drawable/ic_camera"
+            app:civ_border_color="@color/colorPrimaryDark" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_name"

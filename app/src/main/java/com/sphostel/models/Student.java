@@ -15,9 +15,12 @@ public class Student {
     String email_id;
     String emergency_no;
     String blood_group;
-    String password;
 
-    public Student(String name, String department, String academicYear, String roll_no, String room_no, String dob, String mobile_no, String email_id, String emergency_no, String blood_group, String password) {
+    public Student() {
+        //empty constructor
+    }
+
+    public Student(String name, String department, String academicYear, String roll_no, String room_no, String dob, String mobile_no, String email_id, String emergency_no, String blood_group) {
         this.name = name;
         this.department = department;
         this.academicYear = academicYear;
@@ -28,7 +31,7 @@ public class Student {
         this.email_id = email_id;
         this.emergency_no = emergency_no;
         this.blood_group = blood_group;
-        this.password = password;
+        //  this.password = password;
     }
 
     public String getName() {
@@ -69,9 +72,5 @@ public class Student {
 
     public String getBlood_group() {
         return blood_group;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }
