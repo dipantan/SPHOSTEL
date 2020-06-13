@@ -1,7 +1,12 @@
 package com.sphostel.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,11 +15,19 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sphostel.R;
 import com.sphostel.models.Student;
 import com.sphostel.utils.PatternField;
+
+import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignupActivity extends AppCompatActivity {
     TextInputLayout sName, sRoll, sRoom, sDOB, sMobile, sEmail, sEmergency, sBlood, sPass;
@@ -23,11 +36,17 @@ public class SignupActivity extends AppCompatActivity {
     RadioGroup sYear;
     Button signUp;
     DatabaseReference reference;
+    CircleImageView circleImage;
+    FirebaseAuth firebaseAuth;
+    //  String imagePath;
+    Uri uri;
+    private int IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        circleImage = findViewById(R.id.circleImage);
         sName = findViewById(R.id.text_input_name);
         sRoll = findViewById(R.id.roll);
         sRoom = findViewById(R.id.room);
@@ -40,6 +59,18 @@ public class SignupActivity extends AppCompatActivity {
         sDept = findViewById(R.id.spinnerDept);
         signUp = findViewById(R.id.signup);
         sYear = findViewById(R.id.radioGroup);
+        firebaseAuth = FirebaseAuth.getInstance();
+        circleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ask for permission in SDK>22
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                //   intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, IMAGE_REQUEST);
+
+            }
+        });
         sYear.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -62,16 +93,68 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!validatePassword() | !validateRest()) {
                     return;
+                } else if (!stEmail.isEmpty() && !stPass.isEmpty()) {
+                    registerUser();
                 }
+                //check for duplicate roll
+            /*    else if (!stRoll.isEmpty()) {
+                    reference = FirebaseDatabase.getInstance().getReference("students").child(academicYear);
+                    Query query = reference.child(stDept).orderByChild("roll_no").equalTo(stRoll);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                sRoll.setError("Roll already exist");
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    return;
+                }   */
                 //fireBase upload here
                 stDept = sDept.getSelectedItem().toString();
                 reference = FirebaseDatabase.getInstance().getReference("students").child(academicYear);
-                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood, stPass);
+                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood);
                 reference.child(stDept).child(stRoll).setValue(student);
-                Toast.makeText(SignupActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(SignupActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(SignupActivity.this, DummyActivity.class));
             }
         });
+    }
+
+    private void registerUser() {
+        String email = sEmail.getEditText().getText().toString().trim();
+        String password = sPass.getEditText().getText().toString().trim();
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignupActivity.this, "Registration Success", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uri = data.getData();    //image path
+            // imagePath = uri.toString();
+            // Log.d("Imageurl",imagePath);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);     //picasso or glide cam be used here instead
+                circleImage = findViewById(R.id.circleImage);
+                circleImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     //validate rest
