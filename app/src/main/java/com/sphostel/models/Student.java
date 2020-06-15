@@ -31,7 +31,6 @@ public class Student {
         this.email_id = email_id;
         this.emergency_no = emergency_no;
         this.blood_group = blood_group;
-        //  this.password = password;
     }
 
     public String getName() {
