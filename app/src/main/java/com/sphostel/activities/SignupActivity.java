@@ -99,7 +99,7 @@ public class SignupActivity extends AppCompatActivity {
                 stDept = sDept.getSelectedItem().toString();
                 uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 reference = FirebaseDatabase.getInstance().getReference("students").child(academicYear);
-                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood, uuid);
+                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood);
                 //   String roll = stRoll.replace("/","");
                 reference.child(stDept).child(uuid).setValue(student);
                 startActivity(new Intent(SignupActivity.this, DummyActivity.class));
