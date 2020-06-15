@@ -1,5 +1,6 @@
 package com.sphostel.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,21 +23,25 @@ public class LoginActivity extends AppCompatActivity {
     TextView textViewSignup;
     Button buttonLogin;
     TextInputLayout emailId, password;
+    String email, pass;
     FirebaseAuth firebaseAuth;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //  firebaseAuth = FirebaseAuth.getInstance();
+      /*  if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(this,HomeActivity.class));
+            finish();
+        } */
         setContentView(R.layout.activity_login);
         emailId = findViewById(R.id.text_input_userid);
         password = findViewById(R.id.text_input_password);
+        progressDialog = new ProgressDialog(this);
         buttonLogin = findViewById(R.id.buttonLogin);
         textViewSignup = findViewById(R.id.textViewSignUp);
         firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() != null) {
-            finish();
-            startActivity(new Intent(this, HomeActivity.class));
-        }
         textViewSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,8 +54,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (!validateEmail() | !validatePassword()) {
                     return;
                 }
-                //Firebase data uploads from here
                 loginUser();
+                //   Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                //   startActivity(intent);
+
             }
 
             //email validation
@@ -90,17 +97,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email = emailId.getEditText().getText().toString().trim();
-        String pass = password.getEditText().getText().toString().trim();
-        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        email = emailId.getEditText().getText().toString().trim();
+        pass = password.getEditText().getText().toString().trim();
+        progressDialog.setMessage("Logging in ");
+        progressDialog.show();
+        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isComplete()) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finish();
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "You are not registered", Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
             }
         });
     }
