@@ -31,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignupActivity extends AppCompatActivity {
     TextInputLayout sName, sRoll, sRoom, sDOB, sMobile, sEmail, sEmergency, sBlood, sPass;
-    String stName, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood, stPass, stDept, academicYear;
+    String stName, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood, stPass, stDept, academicYear, uuid;
     Spinner sDept;
     RadioGroup sYear;
     Button signUp;
@@ -96,30 +96,12 @@ public class SignupActivity extends AppCompatActivity {
                 } else if (!stEmail.isEmpty() && !stPass.isEmpty()) {
                     registerUser();
                 }
-                //check for duplicate roll
-            /*    else if (!stRoll.isEmpty()) {
-                    reference = FirebaseDatabase.getInstance().getReference("students").child(academicYear);
-                    Query query = reference.child(stDept).orderByChild("roll_no").equalTo(stRoll);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                sRoll.setError("Roll already exist");
-                            }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    return;
-                }   */
-                //fireBase upload here
                 stDept = sDept.getSelectedItem().toString();
+                uuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 reference = FirebaseDatabase.getInstance().getReference("students").child(academicYear);
-                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood);
-                reference.child(stDept).child(stRoll).setValue(student);
-                //    Toast.makeText(SignupActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                Student student = new Student(stName, stDept, academicYear, stRoll, stRoom, stDOB, stMobile, stEmail, stEmergency, stBlood, uuid);
+                //   String roll = stRoll.replace("/","");
+                reference.child(stDept).child(uuid).setValue(student);
                 startActivity(new Intent(SignupActivity.this, DummyActivity.class));
             }
         });
