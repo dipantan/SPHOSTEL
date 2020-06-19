@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -165,18 +166,6 @@ public class SignupActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(stEmail, stPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Student student = new Student(
-                        stName,
-                        department,
-                        year,
-                        stRoll,
-                        stRoom,
-                        stDOB,
-                        stMobile,
-                        stEmail,
-                        stEmergency,
-                        stBlood
-                );
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser user = auth.getCurrentUser();
                 final String UUID = user.getUid();
@@ -186,35 +175,40 @@ public class SignupActivity extends AppCompatActivity {
                     final Uri filePath = uri;
                     if (filePath != null) {
                         StorageReference reference = FirebaseStorage.getInstance().getReference("images/profiles/" + UUID + ".jpg");
-                        reference.putFile(filePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        reference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                progressDialog.dismiss();
                                 Toast.makeText(SignupActivity.this, "Photo uploaded", Toast.LENGTH_SHORT).show();
-                                if (!task.isSuccessful()) {
-                                    Toast.makeText(SignupActivity.this, "Failed to upload photo", Toast.LENGTH_SHORT).show();
-                                }
+                                Student student = new Student(
+                                        stName,
+                                        department,
+                                        year,
+                                        stRoll,
+                                        stRoom,
+                                        stDOB,
+                                        stMobile,
+                                        stEmail,
+                                        stEmergency,
+                                        stBlood,
+                                        taskSnapshot.getDownloadUrl().toString()
+                                );
+                                FirebaseDatabase.getInstance().getReference("students").
+                                        child(UUID).
+                                        setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        FirebaseAuth firebaseAuth;
+                                        firebaseAuth = FirebaseAuth.getInstance();
+                                        firebaseAuth.signOut();
+                                        startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                                    }
+                                });
                             }
                         });
                     }
-                    FirebaseDatabase.getInstance().getReference("students").
-                            child(year).
-                            child(department).
-                            child(UUID).
-                            setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            progressDialog.dismiss();
-                            FirebaseAuth.getInstance().signOut();       //make the user signout after creating account
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            Toast.makeText(SignupActivity.this, "Please login", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
                 } catch (NullPointerException ignored) {
 
-                }
-                if (!task.isSuccessful()) {
-                    Toast.makeText(SignupActivity.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
