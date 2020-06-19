@@ -187,6 +187,7 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             progressDialog.dismiss();
+                            FirebaseAuth.getInstance().signOut();       //make the user signout after creating account
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             Toast.makeText(SignupActivity.this, "Please login", Toast.LENGTH_SHORT).show();
 
