@@ -24,6 +24,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.sphostel.R;
 import com.sphostel.models.Student;
 import com.sphostel.utils.PatternField;
@@ -157,7 +160,7 @@ public class SignupActivity extends AppCompatActivity {
             sPass.requestFocus();
             return;
         }
-        progressDialog.setMessage("Loading");
+        progressDialog.setMessage("Registering");
         progressDialog.show();
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(stEmail, stPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -179,6 +182,20 @@ public class SignupActivity extends AppCompatActivity {
                 final String UUID = user.getUid();
                 //   String UUID;
                 try {
+                    //image upload
+                    final Uri filePath = uri;
+                    if (filePath != null) {
+                        StorageReference reference = FirebaseStorage.getInstance().getReference("images/profiles/" + UUID + ".jpg");
+                        reference.putFile(filePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                Toast.makeText(SignupActivity.this, "Photo uploaded", Toast.LENGTH_SHORT).show();
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(SignupActivity.this, "Failed to upload photo", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
                     FirebaseDatabase.getInstance().getReference("students").
                             child(year).
                             child(department).
@@ -196,9 +213,8 @@ public class SignupActivity extends AppCompatActivity {
                 } catch (NullPointerException ignored) {
 
                 }
-
                 if (!task.isSuccessful()) {
-                    Toast.makeText(SignupActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
