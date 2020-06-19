@@ -23,18 +23,23 @@ public class LoginActivity extends AppCompatActivity {
     TextView textViewSignup;
     Button buttonLogin;
     TextInputLayout emailId, password;
-    String email, pass;
+    // String email, pass;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null) {
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //  firebaseAuth = FirebaseAuth.getInstance();
-      /*  if(firebaseAuth.getCurrentUser() != null){
-            startActivity(new Intent(this,HomeActivity.class));
-            finish();
-        } */
         setContentView(R.layout.activity_login);
         emailId = findViewById(R.id.text_input_userid);
         password = findViewById(R.id.text_input_password);
@@ -82,11 +87,11 @@ public class LoginActivity extends AppCompatActivity {
                 String passwordStd = password.getEditText().getText().toString().trim();
                 if (passwordStd.isEmpty()) {
                     password.setError("Password can't be blank");
-                    //    emailId.setFocusable(true);
+                    password.requestFocus();
                     return false;
                 } else if (!PatternField.PASSWORD_PATTERN.matcher(passwordStd).matches()) {
                     password.setError("Password too weak");
-                    //     emailId.setFocusable(true);
+                    password.requestFocus();
                     return false;
                 } else {
                     password.setError(null);
@@ -97,21 +102,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        email = emailId.getEditText().getText().toString().trim();
-        pass = password.getEditText().getText().toString().trim();
+        final String email = emailId.getEditText().getText().toString().trim();
+        final String pass = password.getEditText().getText().toString().trim();
         progressDialog.setMessage("Logging in ");
         progressDialog.show();
         firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    finish();
-                } else {
+                progressDialog.dismiss();
+                //     Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                finish();
+                if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "You are not registered", Toast.LENGTH_SHORT).show();
                 }
-                progressDialog.dismiss();
             }
         });
     }
