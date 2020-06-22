@@ -6,4 +6,11 @@
         <item>EE</item>
         <item>CST</item>
     </array>
+    <string name="settings">Settings</string>
+    <string name="dashbord">Dashbord</string>
+    <string name="title_activity_bottom_nav">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="todays_event">Todays Event</string>
 </resources>
