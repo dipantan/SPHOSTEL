@@ -25,7 +25,6 @@
         </activity>
         <activity android:name=".activities.SignupActivity" />
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.DummyActivity" />
     </application>
 
 </manifest>
