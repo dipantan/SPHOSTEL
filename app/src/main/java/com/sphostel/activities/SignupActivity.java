@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -166,49 +167,58 @@ public class SignupActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(stEmail, stPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser user = auth.getCurrentUser();
-                final String UUID = user.getUid();
-                //   String UUID;
                 try {
-                    //image upload
-                    final Uri filePath = uri;
-                    if (filePath != null) {
-                        StorageReference reference = FirebaseStorage.getInstance().getReference("images/profiles/" + UUID + ".jpg");
-                        reference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                progressDialog.dismiss();
-                                Toast.makeText(SignupActivity.this, "Photo uploaded", Toast.LENGTH_SHORT).show();
-                                Student student = new Student(
-                                        stName,
-                                        department,
-                                        year,
-                                        stRoll,
-                                        stRoom,
-                                        stDOB,
-                                        stMobile,
-                                        stEmail,
-                                        stEmergency,
-                                        stBlood,
-                                        taskSnapshot.getDownloadUrl().toString()
-                                );
-                                FirebaseDatabase.getInstance().getReference("students").
-                                        child(UUID).
-                                        setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        FirebaseAuth firebaseAuth;
-                                        firebaseAuth = FirebaseAuth.getInstance();
-                                        firebaseAuth.signOut();
-                                        startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-                                    }
-                                });
-                            }
-                        });
-                    }
-                } catch (NullPointerException ignored) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    FirebaseUser user = auth.getCurrentUser();
+                    final String UUID = user.getUid();
+                    //   String UUID;
+                    try {
+                        //image upload
+                        final Uri filePath = uri;
+                        if (filePath != null) {
+                            StorageReference reference = FirebaseStorage.getInstance().getReference("images/profiles/" + UUID + ".jpg");
+                            reference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(SignupActivity.this, "Photo uploaded", Toast.LENGTH_SHORT).show();
+                                    Student student = new Student(
+                                            stName,
+                                            department,
+                                            year,
+                                            stRoll,
+                                            stRoom,
+                                            stDOB,
+                                            stMobile,
+                                            stEmail,
+                                            stEmergency,
+                                            stBlood,
+                                            taskSnapshot.getDownloadUrl().toString()
+                                    );
+                                    FirebaseDatabase.getInstance().getReference("students").
+                                            child(UUID).
+                                            setValue(student).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            FirebaseAuth firebaseAuth;
+                                            firebaseAuth = FirebaseAuth.getInstance();
+                                            firebaseAuth.signOut();
+                                            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    } catch (NullPointerException ignored) {
 
+                    }
+
+                } catch (NullPointerException ignored) {
+                    if (task.getException() != null) {
+                        progressDialog.dismiss();
+                        String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                        Toast.makeText(SignupActivity.this, errorCode, Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
