@@ -16,12 +16,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/grd_bg"
         android:orientation="vertical">
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.5"
-            android:contentDescription="TODO"
             android:scaleType="centerCrop"
             android:src="@drawable/sp" />
     </LinearLayout>
@@ -38,10 +36,18 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="95dp"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_marginTop="108dp"
+        android:src="@drawable/placeholder" />
+
+    <ImageButton
+        android:id="@+id/button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/sign_out" />
+
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="wrap_content"
@@ -82,13 +88,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/event"
                     android:layout_marginTop="5dp"
                     android:text="@string/todays_event"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -119,13 +126,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pay"
                     android:layout_marginTop="5dp"
-                    android:text="@string/todays_event"
+                    android:text="Pay Fees"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -153,13 +161,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/room"
                     android:layout_marginTop="5dp"
-                    android:text="@string/todays_event"
+                    android:text="Change Room"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -187,13 +196,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rule"
                     android:layout_marginTop="5dp"
-                    android:text="@string/todays_event"
+                    android:text="Hostel Rules"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -221,13 +231,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/complain"
                     android:layout_marginTop="5dp"
-                    android:text="@string/todays_event"
+                    android:text="Complains"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -255,13 +266,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/leave"
                     android:layout_marginTop="5dp"
-                    android:text="@string/todays_event"
+                    android:text="Leave Application"
+                    android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
