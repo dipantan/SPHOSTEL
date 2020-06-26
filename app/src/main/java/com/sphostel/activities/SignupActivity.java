@@ -104,63 +104,57 @@ public class SignupActivity extends AppCompatActivity {
         final String stPass = sPass.getEditText().getText().toString().trim();
         final String department = sDept.getSelectedItem().toString();
         final String year = academicYear;
-        //  if(user != null){
 
-        //   }
         if (stName.isEmpty()) {
             sName.setError("Name cant be empty");
             sName.requestFocus();
             return;
-        }
-        if (stRoll.isEmpty()) {
+        } else if (stRoll.isEmpty()) {
             sRoll.setError("Roll cant be empty");
             sRoll.requestFocus();
             return;
-        }
-        if (stRoom.isEmpty()) {
-            sRoom.setError("Name cant be empty");
+        } else if (!PatternField.ROLL_NO.matcher(stRoll).matches()) {
+            sRoll.setError("Invalid Roll");
+            sRoll.requestFocus();
+            return;
+        } else if (stRoom.isEmpty()) {
+            sRoom.setError("Room no cant be empty");
             sRoom.requestFocus();
             return;
-        }
-        if (stDOB.isEmpty()) {
-            sDOB.setError("Name cant be empty");
+        } else if (stDOB.isEmpty()) {
+            sDOB.setError("Date of birth cant be empty");
             sDOB.requestFocus();
             return;
-        }
-        if (stMobile.isEmpty()) {
-            sMobile.setError("Name cant be empty");
+        } else if (stMobile.isEmpty()) {
+            sMobile.setError("Mobile no cant be empty");
             sMobile.requestFocus();
             return;
-        }
-        if (stEmail.isEmpty()) {
-            sEmail.setError("Name cant be empty");
+        } else if (stEmail.isEmpty()) {
+            sEmail.setError("Email cant be empty");
             sEmail.requestFocus();
             return;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(stEmail).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(stEmail).matches()) {
             sEmail.setError("Enter a valid email");
             sEmail.requestFocus();
             return;
-        }
-        if (stEmergency.isEmpty()) {
-            sEmergency.setError("Name cant be empty");
+        } else if (stEmergency.isEmpty()) {
+            sEmergency.setError("Emergency no cant be empty");
             sEmergency.requestFocus();
             return;
-        }
-        if (stBlood.isEmpty()) {
-            sBlood.setError("Name cant be empty");
+        } else if (stBlood.isEmpty()) {
+            sBlood.setError("Blood group cant be empty");
             sBlood.requestFocus();
             return;
-        }
-        if (stPass.isEmpty()) {
-            sPass.setError("Name cant be empty");
+        } else if (stPass.isEmpty()) {
+            sPass.setError("Password cant be empty");
             sPass.requestFocus();
             return;
-        }
-        if (!PatternField.PASSWORD_PATTERN.matcher(stPass).matches()) {
-            sPass.setError("Name cant be empty");
+        } else if (!PatternField.PASSWORD_PATTERN.matcher(stPass).matches()) {
+            sPass.setError("Password too weak");
             sPass.requestFocus();
             return;
+        } else if (year.isEmpty()) {
+            Toast.makeText(this, "Select your year", Toast.LENGTH_SHORT).show();
         }
         progressDialog.setMessage("Registering");
         progressDialog.show();
