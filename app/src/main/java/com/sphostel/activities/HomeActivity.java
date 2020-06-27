@@ -48,7 +48,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +135,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.room:
                 // TODO 20/06/22
+                startActivity(new Intent(this, RoomChangeActivity.class));
                 break;
             case R.id.rule:
                 // TODO 20/06/22
