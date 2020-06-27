@@ -5,53 +5,53 @@ package com.sphostel.models;
  */
 
 public class Rooms {
-    String sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason;
+    String Name, Department, Year, Roll, Mobile, Current_Room, New_Room, Reason;
 
     public Rooms() {
         //empty constructor for receiving fireBase objects
     }
 
-    public Rooms(String sName, String sDept, String sYear, String sRoll, String sMobile, String sCRoom, String sNRoom, String sReason) {
-        this.sName = sName;
-        this.sDept = sDept;
-        this.sYear = sYear;
-        this.sRoll = sRoll;
-        this.sMobile = sMobile;
-        this.sCRoom = sCRoom;
-        this.sNRoom = sNRoom;
-        this.sReason = sReason;
+    public Rooms(String Name, String Department, String Year, String Roll, String Mobile, String Current_Room, String New_Room, String Reason) {
+        this.Name = Name;
+        this.Department = Department;
+        this.Year = Year;
+        this.Roll = Roll;
+        this.Mobile = Mobile;
+        this.Current_Room = Current_Room;
+        this.New_Room = New_Room;
+        this.Reason = Reason;
     }
 
-    public String getsName() {
-        return sName;
+    public String getName() {
+        return Name;
     }
 
-    public String getsDept() {
-        return sDept;
+    public String getDepartment() {
+        return Department;
     }
 
-    public String getsYear() {
-        return sYear;
+    public String getYear() {
+        return Year;
     }
 
-    public String getsRoll() {
-        return sRoll;
+    public String getRoll() {
+        return Roll;
     }
 
-    public String getsMobile() {
-        return sMobile;
+    public String getMobile() {
+        return Mobile;
     }
 
-    public String getsCRoom() {
-        return sCRoom;
+    public String getCurrent_Room() {
+        return Current_Room;
     }
 
-    public String getsNRoom() {
-        return sNRoom;
+    public String getNew_Room() {
+        return New_Room;
     }
 
-    public String getsReason() {
-        return sReason;
+    public String getReason() {
+        return Reason;
     }
 
 }
