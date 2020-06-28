@@ -25,7 +25,7 @@ import com.sphostel.models.Rooms;
 import com.sphostel.models.Student;
 
 public class RoomChangeActivity extends AppCompatActivity implements View.OnClickListener {
-    String sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason;
+    String sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason, sStatus;
     String UUID;
     ProgressDialog dialog;
     private TextView mName;
@@ -107,7 +107,21 @@ public class RoomChangeActivity extends AppCompatActivity implements View.OnClic
                 }
                 dialog.setMessage("Submitting");
                 dialog.show();
-                Rooms rooms = new Rooms(sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason);
+                Rooms rooms = new Rooms(sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason, sStatus);
+
+                //check if user has pending request
+                try {
+                    String status = dataSnapshot.getValue(Rooms.class).getStatus();
+                    if (status.equals("Pending")) {
+                        dialog.dismiss();
+                        Toast.makeText(RoomChangeActivity.this, "Previous request pending", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (NullPointerException ignored) {
+
+                }
+
+                sStatus = "Pending";
                 reference.setValue(rooms).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
