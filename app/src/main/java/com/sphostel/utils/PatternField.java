@@ -18,8 +18,8 @@ public class PatternField {
     public static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +           //  pattern starts
                     "(?=.*[0-9])" +         //  at least 1 digit
-                    "(?=.*[a-z])" +         //  at least 1 lower case letter
-                    "(?=.*[A-Z])" +         //  at least 1 upper case letter
+                    "(?=.*[a-z])" +         //  at least 1 lower case Letter
+                    "(?=.*[A-Z])" +         //  at least 1 upper case Letter
                     "(?=.*[@#$%^&*+=])" +   //  at least 1 special character
                     "(?=\\S+$)" +           //  no white spaces
                     ".{6,}" +               //  at least 6 characters
