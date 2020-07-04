@@ -25,7 +25,8 @@
         <activity
             android:name=".activities.HomeActivity"
             android:screenOrientation="nosensor" />
-        <activity android:name=".activities.RoomChangeActivity"></activity>
+        <activity android:name=".activities.RoomChangeActivity" />
+        <activity android:name=".activities.LeaveApplication"></activity>
     </application>
 
 </manifest>

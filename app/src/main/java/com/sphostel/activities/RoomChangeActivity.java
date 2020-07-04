@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.sphostel.models.Student;
 public class RoomChangeActivity extends AppCompatActivity implements View.OnClickListener {
     String sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason, sStatus;
     String UUID;
+    String status;
     ProgressDialog dialog;
     private TextView mName;
     private TextView mMobile;
@@ -76,6 +78,24 @@ public class RoomChangeActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("requests").child(UUID);
+        reference.removeEventListener(valueEventListener);
+    }
+
     private void initView() {
         mName = findViewById(R.id.name);
         mMobile = findViewById(R.id.mobile);
@@ -90,46 +110,30 @@ public class RoomChangeActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setValues() {
+        sNRoom = mRoomNoNew.getText().toString().trim();
+        sReason = mReason.getText().toString().trim();
+        if (sNRoom.equals(sCRoom)) {
+            Toast.makeText(RoomChangeActivity.this, "Enter different room no", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (sReason.isEmpty()) {
+            Toast.makeText(RoomChangeActivity.this, "Enter valid reason", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        dialog.setMessage("Submitting");
+        dialog.show();
 
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("requests").child(UUID);
-        reference.addValueEventListener(new ValueEventListener() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("requests").child(UUID);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                sNRoom = mRoomNoNew.getText().toString().trim();
-                sReason = mReason.getText().toString().trim();
-                if (sNRoom.equals(sCRoom)) {
-                    Toast.makeText(RoomChangeActivity.this, "Enter different room no", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (sReason.isEmpty()) {
-                    Toast.makeText(RoomChangeActivity.this, "Enter valid reason", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                dialog.setMessage("Submitting");
-                dialog.show();
-                Rooms rooms = new Rooms(sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason, sStatus);
-
-                //check if user has pending request
                 try {
-                    String status = dataSnapshot.getValue(Rooms.class).getStatus();
-                    if (status.equals("Pending")) {
-                        dialog.dismiss();
-                        Toast.makeText(RoomChangeActivity.this, "Previous request pending", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } catch (NullPointerException ignored) {
-
+                    status = dataSnapshot.getValue(Rooms.class).getStatus();
+                    Log.d("Val", status);
+                } catch (Exception e) {
+                    Toast.makeText(RoomChangeActivity.this, "", Toast.LENGTH_SHORT).show();
                 }
-
-                sStatus = "Pending";
-                reference.setValue(rooms).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        dialog.dismiss();
-                        Toast.makeText(RoomChangeActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RoomChangeActivity.this, HomeActivity.class));
-                    }
-                });
             }
 
             @Override
@@ -137,6 +141,28 @@ public class RoomChangeActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+
+        //       try {
+        Log.d("Val", status);
+        if (status.equals("Pending")) {
+            dialog.dismiss();
+            Toast.makeText(RoomChangeActivity.this, "Previous request pending", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(RoomChangeActivity.this, HomeActivity.class));
+        }
+        //       } catch (Exception e) {
+               /*_____set values_____*/
+        sStatus = "Pending";
+        Rooms rooms = new Rooms(sName, sDept, sYear, sRoll, sMobile, sCRoom, sNRoom, sReason, sStatus);
+        reference.setValue(rooms).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                dialog.dismiss();
+                startActivity(new Intent(RoomChangeActivity.this, HomeActivity.class));
+                Toast.makeText(RoomChangeActivity.this, "Submitted", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //   }
+
     }
 
     @Override

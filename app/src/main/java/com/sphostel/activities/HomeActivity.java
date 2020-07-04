@@ -145,6 +145,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.leave:
                 // TODO 20/06/22
+                startActivity(new Intent(this, LeaveApplication.class));
                 break;
             case R.id.button:
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
